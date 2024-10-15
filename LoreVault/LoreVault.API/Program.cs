@@ -1,22 +1,63 @@
-using Amazon.DynamoDBv2;
+using Azure.Core;
 using LoreVault.DAL;
+using LoreVault.Domain.Authorization;
 using LoreVault.Domain.Interfaces;
 using LoreVault.Service;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-// AWS DDB
-builder.Services.AddSingleton<IAmazonDynamoDB, AmazonDynamoDBClient>();
+
+// Auth0
+var auth0Settings = builder.Configuration.GetSection("Auth0");
+var domain = auth0Settings["Domain"];
+var audience = auth0Settings["Audience"];
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => 
+{
+    options.Authority = $"https://{domain}/";
+    options.Audience = audience;
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidIssuer = $"https://{domain}/",
+        ValidAudience = audience,
+        NameClaimType = ClaimTypes.NameIdentifier
+    };
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    /*options.AddPolicy("read:messages",
+        policy => policy.Requirements.Add(
+            new HasScopeRequirement("read:messages", domain)
+            )
+        );*/
+
+    options.AddPolicy("read:users",
+        policy => policy.Requirements.Add(
+            new HasScopeRequirement("read:users", $"https://{domain}/")
+            )
+        );
+});
+
+builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
+
+// Bind the CosmosDb section from appsettings.json
+builder.Services.Configure<CosmosDbSettings>(builder.Configuration.GetSection("CosmosDb"));
 
 // Dependency injection
-builder.Services.AddScoped<IWeatherForecastRepository, WeatherForecastRepository>();
-builder.Services.AddScoped<IWeatherForecastService, WeatherForecastService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IDataService, DataService>();
 
 var app = builder.Build();
 
@@ -29,6 +70,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -3,13 +3,24 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoreVault.Service", "LoreVault.Service\LoreVault.Service.csproj", "{40FE0E60-C81B-4F02-811B-EEA647A5BAC4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoreVault.API", "LoreVault.API\LoreVault.API.csproj", "{12AB4B69-FADB-451E-AADE-F8289678700F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4C438003-1957-4084-B411-F98A8F6EDD3D} = {4C438003-1957-4084-B411-F98A8F6EDD3D}
+		{55E1C077-FB41-497A-A73E-C23DEB6BEA05} = {55E1C077-FB41-497A-A73E-C23DEB6BEA05}
+		{8BFB3E5D-865A-415C-86A9-C84B08AF30DA} = {8BFB3E5D-865A-415C-86A9-C84B08AF30DA}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoreVault.Domain", "LoreVault.Domain\LoreVault.Domain.csproj", "{6AA4F3D7-40B0-452D-94A1-F27A62522C99}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoreVault.DAL", "LoreVault.DAL\LoreVault.DAL.csproj", "{55E1C077-FB41-497A-A73E-C23DEB6BEA05}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8BFB3E5D-865A-415C-86A9-C84B08AF30DA} = {8BFB3E5D-865A-415C-86A9-C84B08AF30DA}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoreVault.DAL", "LoreVault.DAL\LoreVault.DAL.csproj", "{9534E8E0-9DEE-4666-8393-2B0AA210F47F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoreVault.Domain", "LoreVault.Domain\LoreVault.Domain.csproj", "{8BFB3E5D-865A-415C-86A9-C84B08AF30DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoreVault.API", "LoreVault.API\LoreVault.API.csproj", "{12AB4B69-FADB-451E-AADE-F8289678700F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoreVault.Service", "LoreVault.Service\LoreVault.Service.csproj", "{4C438003-1957-4084-B411-F98A8F6EDD3D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8BFB3E5D-865A-415C-86A9-C84B08AF30DA} = {8BFB3E5D-865A-415C-86A9-C84B08AF30DA}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,22 +28,22 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{40FE0E60-C81B-4F02-811B-EEA647A5BAC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{40FE0E60-C81B-4F02-811B-EEA647A5BAC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{40FE0E60-C81B-4F02-811B-EEA647A5BAC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{40FE0E60-C81B-4F02-811B-EEA647A5BAC4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6AA4F3D7-40B0-452D-94A1-F27A62522C99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6AA4F3D7-40B0-452D-94A1-F27A62522C99}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6AA4F3D7-40B0-452D-94A1-F27A62522C99}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6AA4F3D7-40B0-452D-94A1-F27A62522C99}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9534E8E0-9DEE-4666-8393-2B0AA210F47F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9534E8E0-9DEE-4666-8393-2B0AA210F47F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9534E8E0-9DEE-4666-8393-2B0AA210F47F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9534E8E0-9DEE-4666-8393-2B0AA210F47F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{12AB4B69-FADB-451E-AADE-F8289678700F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{12AB4B69-FADB-451E-AADE-F8289678700F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12AB4B69-FADB-451E-AADE-F8289678700F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12AB4B69-FADB-451E-AADE-F8289678700F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55E1C077-FB41-497A-A73E-C23DEB6BEA05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55E1C077-FB41-497A-A73E-C23DEB6BEA05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55E1C077-FB41-497A-A73E-C23DEB6BEA05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55E1C077-FB41-497A-A73E-C23DEB6BEA05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BFB3E5D-865A-415C-86A9-C84B08AF30DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BFB3E5D-865A-415C-86A9-C84B08AF30DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BFB3E5D-865A-415C-86A9-C84B08AF30DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BFB3E5D-865A-415C-86A9-C84B08AF30DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C438003-1957-4084-B411-F98A8F6EDD3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C438003-1957-4084-B411-F98A8F6EDD3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C438003-1957-4084-B411-F98A8F6EDD3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C438003-1957-4084-B411-F98A8F6EDD3D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
