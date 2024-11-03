@@ -39,5 +39,24 @@ namespace LoreVault.Service
 
             throw new Exception("Could not retrieve access token");
         }
+
+        public async Task<string> GetUserAccessTokenAsync(string authorizationCode, string redirectUri)
+        {
+            var client = new RestClient($"https://{_domain}/oauth/token");
+            var request = new RestRequest(Method.Post.ToString());
+            request.AddHeader("content-type", "application/x-www-form-urlencoded");
+            request.AddParameter("application/x-www-form-urlencoded",
+                $"grant_type=authorization_code&client_id={_clientId}&client_secret={_clientSecret}&code={authorizationCode}&redirect_uri={redirectUri}",
+                ParameterType.RequestBody);
+            var response = await client.ExecuteAsync(request);
+
+            if (response.IsSuccessful)
+            {
+                var tokenResponse = JsonSerializer.Deserialize<OAuthTokenResponse>(response.Content);
+                return tokenResponse?.AccessToken;
+            }
+
+            throw new Exception("Could not retrieve user access token");
+        }
     }
 }

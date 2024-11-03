@@ -9,14 +9,10 @@ namespace LoreVault.API.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly IAuthService _authService;
-        private readonly IDataService _dataService;
 
-        public UserController(IUserService userService, IAuthService authService, IDataService dataService)
+        public UserController(IUserService userService)
         { 
             _userService = userService;
-            _authService = authService;
-            _dataService = dataService;
         }
 
         [HttpGet("get-user-by-id-private")]

@@ -1,4 +1,3 @@
-using Azure.Core;
 using LoreVault.DAL;
 using LoreVault.Domain.Authorization;
 using LoreVault.Domain.Interfaces;
@@ -6,7 +5,6 @@ using LoreVault.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,11 +15,25 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Auth0
-var auth0Settings = builder.Configuration.GetSection("Auth0");
+var auth0Settings = builder.Configuration.GetSection("Auth0SPA");
 var domain = auth0Settings["Domain"];
 var audience = auth0Settings["Audience"];
+var clientId = auth0Settings["ClientId"];
+var clientSecret = auth0Settings["ClientSecret"];
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => 
+// Define CORS policy
+builder.Services.AddCors(options => 
+{
+    options.AddPolicy("AllowFrontendOrigin", policy => 
+    {
+        policy.WithOrigins("http://localhost:3000")
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials();
+    });
+});
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     options.Authority = $"https://{domain}/";
     options.Audience = audience;
@@ -70,6 +82,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors("AllowFrontendOrigin");
 app.UseAuthentication();
 app.UseAuthorization();
 

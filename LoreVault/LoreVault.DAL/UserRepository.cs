@@ -1,5 +1,4 @@
 ﻿using LoreVault.Domain.Interfaces;
-using LoreVault.Domain.Models;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Options;
 
@@ -7,12 +6,6 @@ namespace LoreVault.DAL
 {
     public class UserRepository : IUserRepository
     {
-        /*// The Azure Cosmos DB endpoint for running this sample.
-        private static readonly string EndpointUri = System.Configuration.ConfigurationManager.AppSettings["https://howtofail.documents.azure.com:443/"];
-
-        // The primary key for the Azure Cosmos account.
-        private static readonly string PrimaryKey = System.Configuration.ConfigurationManager.AppSettings["dDbblLdfa6Sw4nhSUHjT8xPjRSE04yksjbBFTRStkPkdwSgwksTu7bX1wkHKh5bhGoURw7zUT4c8ACDbK1Znmg=="];
-*/
         private CosmosClient cosmosClient;
         private Database database;
         private Container container;
@@ -41,21 +34,6 @@ namespace LoreVault.DAL
         public async Task CreateUser(Domain.Models.User user)
         {
             await container.CreateItemAsync<Domain.Models.User>(user, new PartitionKey(user.Id.ToString()));
-
-            /*Domain.Models.User someUser = new Domain.Models.User
-            {
-                Id = Guid.NewGuid(),
-                PartitionKey = "newUser",
-                FirstName = "Borat",
-                LastName = "Sashlik"
-            };
-
-            try 
-            {
-                ItemResponse<Domain.Models.User> someUserResponse = await container.ReadItemAsync<Domain.Models.User>(someUser.Id.ToString(), new PartitionKey(someUser.PartitionKey));
-            }
-
-            throw new NotImplementedException();*/
         }
 
         public async Task<IEnumerable<Domain.Models.User>> GetUsers()

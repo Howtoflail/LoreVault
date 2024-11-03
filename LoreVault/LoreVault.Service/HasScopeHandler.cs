@@ -11,18 +11,12 @@ namespace LoreVault.Service
         )
         {
             var scopeClaim = context.User.FindFirst(c => c.Type == "scope" && c.Issuer == requirement.Issuer);
-            //var scopeClaim = context.User.FindFirst(c => c.Type == "scope");
 
             if (scopeClaim == null)
             {
                 Console.WriteLine("Scope claim not found");
                 return Task.CompletedTask;
             }
-            /*else
-            {
-                Console.WriteLine($"Scope Claim Issuer: {scopeClaim?.Issuer}");
-                Console.WriteLine($"Requirement Claim Issuer: {requirement.Issuer}");
-            }*/
 
             // Split the scopes string into an array
             var scopes = scopeClaim.Value.Split(' ');
