@@ -25,7 +25,7 @@ before_script:
 build:
   stage: build
   script:
-    - docker build --build-arg BUILD_CONFIGURATION=$BUILD_CONFIG -t $IMAGE_NAME:$CI_COMMIT_SHORT_SHA -f ./LoreVault/LoreVault.API/Dockerfile .
+    - docker build --build-arg BUILD_CONFIGURATION=$BUILD_CONFIG -t $IMAGE_NAME:$CI_COMMIT_SHORT_SHA -f ./LoreVault/Dockerfile .
     - docker push $IMAGE_NAME:$CI_COMMIT_SHORT_SHA
   only:
     - development
