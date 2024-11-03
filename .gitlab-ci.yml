@@ -20,7 +20,7 @@ before_script:
   - apt-get update && apt-get install -y docker.io
   - echo "Using .NET version $DOTNET_VERSION"
   - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
-  - export DOCKER_HOST=tcp://docker:2375
+  # - export DOCKER_HOST=tcp://docker:2375
   - docker info
   # - echo "$CI_JOB_TOKEN" | docker login -u "gitlab-ci-token" --password-stdin "registry.gitlab.com"
 
