@@ -35,8 +35,3 @@ deploy:
   only:
     - main  # Target only the main branch for deployment jobs
   when: manual  # Allows deployment to be triggered manually
-
-# Add job rules to trigger only if changes are made in backend-related files
-rules:
-  - changes:
-      - "backend/**/*"
