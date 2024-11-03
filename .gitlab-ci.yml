@@ -17,6 +17,7 @@ services:
   - docker:20.10.16-dind
 
 before_script:
+  - apt-get update && apt-get install -y docker.io
   - echo "Using .NET version $DOTNET_VERSION"
   - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
 
