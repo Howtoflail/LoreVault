@@ -7,31 +7,33 @@ variables:
   DOTNET_VERSION: "8.0"
   BUILD_CONFIG: "Release"
   PROJECT_PATH: "./LoreVault/LoreVault.API/LoreVault.API.csproj"
+  IMAGE_NAME: "registry.gitlab.com/I516586/lorevault/lorevault-api"
+
+image: mcr.microsoft.com/dotnet/sdk:8.0-alpine
 
 before_script:
   - echo "Using .NET version $DOTNET_VERSION"
-  - apt-get update && apt-get install -y dotnet-sdk-$DOTNET_VERSION
+  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
 
 build:
   stage: build
   script:
-    - dotnet restore
-    - dotnet build $PROJECT_PATH --configuration $BUILD_CONFIG
+    - docker build --build-arg BUILD_CONFIGURATION=$BUILD_CONFIG -t $IMAGE_NAME:$CI_COMMIT_SHORT_SHA -f ./LoreVault/LoreVault.API/Dockerfile .
+    - docker push $IMAGE_NAME:$CI_COMMIT_SHORT_SHA
   only:
-    - development  # Target only the development branch for build jobs
+    - development
 
 test:
   stage: test
   script:
-    - dotnet test $PROJECT_PATH --no-build --verbosity normal
+    - docker run --rm $IMAGE_NAME:$CI_COMMIT_SHORT_SHA dotnet test $PROJECT_PATH --no-build --verbosity normal
   only:
-    - development  # Target only the development branch for test jobs
+    - development
 
 deploy:
   stage: deploy
   script:
-    - echo "Preparing for deployment..."
-    # Insert deployment script
+    - echo "Deploying image $IMAGE_NAME:$CI_COMMIT_SHORT_SHA"
   only:
-    - main  # Target only the main branch for deployment jobs
-  when: manual  # Allows deployment to be triggered manually
+    - main
+  when: manual
