@@ -1,0 +1,42 @@
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  DOTNET_VERSION: "8.0"
+  BUILD_CONFIG: "Release"
+  PROJECT_PATH: "./LoreVault/LoreVault.API/LoreVault.API.csproj"
+
+before_script:
+  - echo "Using .NET version $DOTNET_VERSION"
+  - apt-get update && apt-get install -y dotnet-sdk-$DOTNET_VERSION
+
+build:
+  stage: build
+  script:
+    - dotnet restore
+    - dotnet build $PROJECT_PATH --configuration $BUILD_CONFIG
+  only:
+    - development  # Target only the development branch for build jobs
+
+test:
+  stage: test
+  script:
+    - dotnet test $PROJECT_PATH --no-build --verbosity normal
+  only:
+    - development  # Target only the development branch for test jobs
+
+deploy:
+  stage: deploy
+  script:
+    - echo "Preparing for deployment..."
+    # Insert deployment script
+  only:
+    - main  # Target only the main branch for deployment jobs
+  when: manual  # Allows deployment to be triggered manually
+
+# Add job rules to trigger only if changes are made in backend-related files
+rules:
+  - changes:
+      - "backend/**/*"
