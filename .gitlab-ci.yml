@@ -19,7 +19,7 @@ services:
 before_script:
   - apt-get update && apt-get install -y docker.io
   - echo "Using .NET version $DOTNET_VERSION"
-  - echo "pw4y8zAHvexMDU2yZFFw" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+  - echo "$CI_JOB_TOKEN" | docker login -u "gitlab-ci-token" --password-stdin "registry.gitlab.com"
 
 build:
   stage: build
