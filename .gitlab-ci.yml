@@ -10,7 +10,7 @@ variables:
   IMAGE_NAME: "registry.gitlab.com/I516586/lorevault/lorevault-api"
 
 # Use .NET SDK image as the base image
-image: mcr.microsoft.com/dotnet/sdk:8.0-alpine
+image: mcr.microsoft.com/dotnet/sdk:8.0
 
 # Add Docker service to enable Docker commands
 services:
