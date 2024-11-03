@@ -14,7 +14,7 @@ image: mcr.microsoft.com/dotnet/sdk:8.0
 
 # Add Docker service to enable Docker commands
 services:
-  - docker:20.10.16-dind
+  - docker:24.0.5-dind
 
 before_script:
   - apt-get update && apt-get install -y docker.io
