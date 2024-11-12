@@ -1,6 +1,9 @@
-﻿using LoreVault.Domain.Interfaces;
+﻿using Google.Apis.Auth;
+using LoreVault.Domain.Interfaces;
+using LoreVault.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace LoreVault.API.Controllers
 {
@@ -54,11 +57,41 @@ namespace LoreVault.API.Controllers
             return Ok(users);
         }
 
-        [HttpPost("create-user")]
-        public async Task<IActionResult> CreateUser([FromBody] Domain.Models.User user)
+        //[HttpPost("create-user")]
+        //public async Task<IActionResult> CreateUser([FromBody] Domain.Models.CreateUserRequest userRequest)
+        //{
+        //    await _userService.CreateUser(userRequest);
+        //    return Ok();
+        //}
+
+        [HttpPost("login-with-google")]
+        public async Task<IActionResult> LoginWithGoogle([FromBody] string idToken)
         {
-            await _userService.CreateUser(user);
-            return Ok();
+            var googleUser = await VerifyGoogleTokenAsync(idToken);
+
+            if (googleUser == null) 
+            {
+                return Unauthorized("Invalid token");
+            }
+
+            // Check if user already exists
+            var user = await _userService.GetUserByGoogleId(googleUser.Subject);
+            if (user == null)
+            {
+                var userRequest = new CreateUserRequest { FirstName = googleUser.GivenName, LastName = googleUser.FamilyName };
+
+                await _userService.CreateUserWithGoogleId(userRequest, googleUser.Subject);
+            }
+                 
+            return Ok(user);
+        }
+
+        private async Task<GoogleJsonWebSignature.Payload> VerifyGoogleTokenAsync(string idToken)
+        {
+            var client = new HttpClient();
+            var response = await client.GetStringAsync(idToken);
+
+            return JsonConvert.DeserializeObject<GoogleJsonWebSignature.Payload>(response);
         }
     }
 }

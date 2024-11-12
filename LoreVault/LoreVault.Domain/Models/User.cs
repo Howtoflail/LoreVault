@@ -6,7 +6,7 @@ namespace LoreVault.Domain.Models
     public class User
     {
         [JsonProperty(PropertyName = "id")]
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty(PropertyName = "partitionKey")]
         public string PartitionKey { get; set; }

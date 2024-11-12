@@ -68,5 +68,23 @@ namespace LoreVault.DAL
                 throw;
             }
         }
+
+        // Make function async
+        public async Task<Domain.Models.User> GetUserByGoogleId(string googleId)
+        {
+            try 
+            {
+                var query = container.GetItemLinqQueryable<Domain.Models.User>(true)
+                    .Where(u => u.PartitionKey == googleId)
+                    .AsEnumerable()
+                    .FirstOrDefault();
+
+                return query;
+            }
+            catch (CosmosException ex)
+            {
+                throw;
+            }
+        }
     }
 }
