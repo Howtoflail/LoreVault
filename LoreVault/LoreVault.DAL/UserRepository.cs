@@ -28,12 +28,12 @@ namespace LoreVault.DAL
         private async Task InitializeDatabase()
         {
             database = await cosmosClient.CreateDatabaseIfNotExistsAsync(databaseId);
-            container = await database.CreateContainerIfNotExistsAsync(containerId, "/partitionKey");
+            container = await database.CreateContainerIfNotExistsAsync(containerId, "/GoogleId");
         }
 
-        public async Task CreateUser(Domain.Models.User user)
+        public async Task<ItemResponse<Domain.Models.User>> CreateUser(Domain.Models.User user)
         {
-            await container.CreateItemAsync<Domain.Models.User>(user, new PartitionKey(user.Id.ToString()));
+            return await container.CreateItemAsync<Domain.Models.User>(user, new PartitionKey(user.GoogleId));
         }
 
         public async Task<IEnumerable<Domain.Models.User>> GetUsers()
@@ -75,7 +75,7 @@ namespace LoreVault.DAL
             try 
             {
                 var query = container.GetItemLinqQueryable<Domain.Models.User>(true)
-                    .Where(u => u.PartitionKey == googleId)
+                    .Where(u => u.GoogleId == googleId)
                     .AsEnumerable()
                     .FirstOrDefault();
 

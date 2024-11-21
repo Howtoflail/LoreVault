@@ -8,8 +8,8 @@ namespace LoreVault.Domain.Models
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
 
-        [JsonProperty(PropertyName = "partitionKey")]
-        public string PartitionKey { get; set; }
+        [JsonProperty(PropertyName = "GoogleId")]
+        public string GoogleId { get; set; }
 
         public string FirstName { get; set; }
         public string LastName { get; set; }

@@ -1,9 +1,8 @@
-﻿using Google.Apis.Auth;
-using LoreVault.Domain.Interfaces;
+﻿using LoreVault.Domain.Interfaces;
 using LoreVault.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+using System.Security.Claims;
 
 namespace LoreVault.API.Controllers
 {
@@ -12,10 +11,12 @@ namespace LoreVault.API.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly ITokenService _tokenService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, ITokenService tokenService)
         { 
             _userService = userService;
+            _tokenService = tokenService;
         }
 
         [HttpGet("get-user-by-id-private")]
@@ -57,41 +58,39 @@ namespace LoreVault.API.Controllers
             return Ok(users);
         }
 
-        //[HttpPost("create-user")]
-        //public async Task<IActionResult> CreateUser([FromBody] Domain.Models.CreateUserRequest userRequest)
-        //{
-        //    await _userService.CreateUser(userRequest);
-        //    return Ok();
-        //}
-
         [HttpPost("login-with-google")]
-        public async Task<IActionResult> LoginWithGoogle([FromBody] string idToken)
+        public async Task<IActionResult> LoginWithGoogle([FromBody] LoginWithGoogleRequest request)
         {
-            var googleUser = await VerifyGoogleTokenAsync(idToken);
+            if (string.IsNullOrWhiteSpace(request.IdToken))
+            {
+                return BadRequest("idToken is required.");
+            }
 
-            if (googleUser == null) 
+            var principal = await _userService.VerifyGoogleTokenAsync(request.IdToken);
+
+            if (principal == null)
             {
                 return Unauthorized("Invalid token");
             }
 
+            var googleId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var firstName = principal.FindFirst(ClaimTypes.GivenName)?.Value ?? string.Empty;
+            var lastName = principal.FindFirst(ClaimTypes.Surname)?.Value ?? string.Empty;
+
             // Check if user already exists
-            var user = await _userService.GetUserByGoogleId(googleUser.Subject);
+            var user = await _userService.GetUserByGoogleId(googleId);
+
             if (user == null)
             {
-                var userRequest = new CreateUserRequest { FirstName = googleUser.GivenName, LastName = googleUser.FamilyName };
+                var userRequest = new CreateUserRequest { FirstName = firstName, LastName = lastName };
 
-                await _userService.CreateUserWithGoogleId(userRequest, googleUser.Subject);
+                user = await _userService.CreateUserWithGoogleId(userRequest, googleId);
             }
-                 
-            return Ok(user);
-        }
 
-        private async Task<GoogleJsonWebSignature.Payload> VerifyGoogleTokenAsync(string idToken)
-        {
-            var client = new HttpClient();
-            var response = await client.GetStringAsync(idToken);
+            var jwtToken = _tokenService.GenerateJwt(user, request.IdToken);
 
-            return JsonConvert.DeserializeObject<GoogleJsonWebSignature.Payload>(response);
+            //return Ok(user);
+            return Ok(jwtToken);
         }
     }
 }
