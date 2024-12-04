@@ -41,11 +41,15 @@ build:
 
 deploy:
   stage: deploy
-  image: bitnami/kubectl:latest
+  image: ubuntu:latest
+  before_script:
+    - export KUBECONFIG=$KUBECONFIG_FILE
   script:
-    - echo "$KUBECONFIG" > /root/.kube/config
-    # - kubectl -n $KUBE_NAMESPACE set image deployment/$DEPLOYMENT_NAME api=$IMAGE_NAME:$CI_COMMIT_SHORT_SHA
-    # - kubectl -n $KUBE_NAMESPACE rollout status deployment/$DEPLOYMENT_NAME
+    - apt-get update && apt-get install -y curl
+    # Install kubectl
+    - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+    - chmod +x ./kubectl
+    - mv ./kubectl /usr/local/bin/kubectl
     - kubectl apply -f deployment.yaml
     - kubectl rollout status deployment/$DEPLOYMENT_NAME -n $KUBE_NAMESPACE
   only:

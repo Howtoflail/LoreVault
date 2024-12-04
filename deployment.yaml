@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: howtofail/lorevault-api:latest # Replace 'latest' with the appropriate tag during deployment
+          image: howtofail/lorevault-api:latest
           ports:
             - containerPort: 5000
           env:
