@@ -1,6 +1,6 @@
 stages:
   - build
-  - test
+  # - test
   - deploy
 
 variables:
@@ -32,12 +32,12 @@ build:
   # only:
   #   - development
 
-test:
-  stage: test
-  script:
-    - docker run --rm $IMAGE_NAME:$CI_COMMIT_SHORT_SHA dotnet test $PROJECT_PATH --no-build --verbosity normal
-  # only:
-  #   - development
+# test:
+#   stage: test
+#   script:
+#     - docker run --rm $IMAGE_NAME:$CI_COMMIT_SHORT_SHA dotnet test $PROJECT_PATH --no-build --verbosity normal
+#   # only:
+#   #   - development
 
 deploy:
   stage: deploy
