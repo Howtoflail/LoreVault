@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lorevault-backend
+  namespace: lorevault-testing
+spec:
+  replicas: 2 # Number of pods to run
+  selector:
+    matchLabels:
+      app: lorevault-backend
+  template:
+    metadata:
+      labels:
+        app: lorevault-backend
+    spec:
+      containers:
+        - name: api
+          image: howtofail/lorevault-api:latest # Replace 'latest' with the appropriate tag during deployment
+          ports:
+            - containerPort: 5000
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Production"

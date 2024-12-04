@@ -8,6 +8,8 @@ variables:
   BUILD_CONFIG: "Release"
   PROJECT_PATH: "./LoreVault/LoreVault.API/LoreVault.API.csproj"
   IMAGE_NAME: "howtofail/lorevault-api"
+  KUBE_NAMESPACE: "lorevault-testing"
+  DEPLOYMENT_NAME: "lorevault-backend"
 
 # Use .NET SDK image as the base image
 image: mcr.microsoft.com/dotnet/sdk:8.0
@@ -27,20 +29,25 @@ build:
   script:
     - docker build --build-arg BUILD_CONFIGURATION=$BUILD_CONFIG -t $IMAGE_NAME:$CI_COMMIT_SHORT_SHA -f LoreVault/Dockerfile LoreVault/
     - docker push $IMAGE_NAME:$CI_COMMIT_SHORT_SHA
-  only:
-    - development
+  # only:
+  #   - development
 
 test:
   stage: test
   script:
     - docker run --rm $IMAGE_NAME:$CI_COMMIT_SHORT_SHA dotnet test $PROJECT_PATH --no-build --verbosity normal
-  only:
-    - development
+  # only:
+  #   - development
 
 deploy:
   stage: deploy
+  image: bitnami/kubectl:latest
   script:
-    - echo "Deploying image $IMAGE_NAME:$CI_COMMIT_SHORT_SHA"
+    - echo "$KUBECONFIG" > /root/.kube/config
+    # - kubectl -n $KUBE_NAMESPACE set image deployment/$DEPLOYMENT_NAME api=$IMAGE_NAME:$CI_COMMIT_SHORT_SHA
+    # - kubectl -n $KUBE_NAMESPACE rollout status deployment/$DEPLOYMENT_NAME
+    - kubectl apply -f deployment.yaml
+    - kubectl rollout status deployment/$DEPLOYMENT_NAME -n $KUBE_NAMESPACE
   only:
     - main
   when: manual
