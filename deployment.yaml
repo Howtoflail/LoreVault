@@ -4,7 +4,7 @@ metadata:
   name: lorevault-backend
   namespace: lorevault-testing
 spec:
-  replicas: 2 # Number of pods to run
+  replicas: 1 # Number of pods to run
   selector:
     matchLabels:
       app: lorevault-backend
@@ -18,6 +18,11 @@ spec:
           image: howtofail/lorevault-api:latest
           ports:
             - containerPort: 5000
+          resources:
+            requests:
+              cpu: "100m"  # Minimum CPU requested
+            limits:
+              cpu: "500m"  # Maximum CPU allowed
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: "Production"
