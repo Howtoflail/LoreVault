@@ -17,7 +17,8 @@ spec:
         - name: api
           image: howtofail/lorevault-api:latest
           ports:
-            - containerPort: 5000
+            # - name: http # try adding later
+            - containerPort: 8080
           resources:
             requests:
               cpu: "100m"  # Minimum CPU requested
