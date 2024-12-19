@@ -21,12 +21,16 @@ var audience = auth0Settings["Audience"];
 var clientId = auth0Settings["ClientId"];
 var clientSecret = auth0Settings["ClientSecret"];
 
+//Frontend
+var frontendSettings = builder.Configuration.GetSection("Frontend");
+var frontendDomain = frontendSettings["Domain"];
+
 // Define CORS policy
 builder.Services.AddCors(options => 
 {
     options.AddPolicy("AllowFrontendOrigin", policy => 
     {
-        policy.WithOrigins("http://localhost:3000")
+        policy.WithOrigins("http://localhost:3000", frontendDomain!)
         .AllowAnyHeader()
         .AllowAnyMethod()
         .AllowCredentials();
