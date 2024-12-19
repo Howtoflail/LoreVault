@@ -12,10 +12,13 @@ spec:
     metadata:
       labels:
         app: lorevault-backend
+      annotations:
+        redeploy-timestamp: "$(date + '%s')"
     spec:
       containers:
         - name: api
           image: howtofail/lorevault-api:latest
+          imagePullPolicy: Always
           ports:
             # - name: http # try adding later
             - containerPort: 8080
