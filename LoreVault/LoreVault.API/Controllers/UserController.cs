@@ -7,7 +7,7 @@ using System.Security.Claims;
 namespace LoreVault.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/User")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
