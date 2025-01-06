@@ -27,6 +27,8 @@ before_script:
 build:
   stage: build
   script:
+    - echo "Creating appsettings.json..."
+    - echo "$APPSETTINGS" > LoreVault/LoreVault.API/appsettings.json
     - docker build --build-arg BUILD_CONFIGURATION=$BUILD_CONFIG -t $IMAGE_NAME:$CI_COMMIT_SHORT_SHA -t $IMAGE_NAME:latest -f LoreVault/Dockerfile LoreVault/
     - docker push $IMAGE_NAME:$CI_COMMIT_SHORT_SHA
     - docker push $IMAGE_NAME:latest
@@ -52,7 +54,9 @@ deploy:
     - chmod +x ./kubectl
     - mv ./kubectl /usr/local/bin/kubectl
     - kubectl apply -f deployment.yaml
-    - kubectl set image deployment/$DEPLOYMENT_NAME api=$IMAGE_NAME:latest -n $KUBE_NAMESPACE
+    - kubectl set image deployment/$DEPLOYMENT_NAME api=$IMAGE_NAME:${CI_COMMIT_SHORT_SHA} -n $KUBE_NAMESPACE
+    # Add an annotation to force a rollout
+    - kubectl annotate deployment/$DEPLOYMENT_NAME kubernetes.io/change-cause="Redeploy at $(date)" --overwrite -n $KUBE_NAMESPACE
     - kubectl rollout status deployment/$DEPLOYMENT_NAME -n $KUBE_NAMESPACE
   only:
     - main
