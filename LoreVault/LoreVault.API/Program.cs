@@ -30,10 +30,20 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontendOrigin", policy => 
     {
-        policy.WithOrigins("http://localhost:3000", frontendDomain!)
-        .AllowAnyHeader()
-        .AllowAnyMethod()
-        .AllowCredentials();
+        if (frontendDomain != null) 
+        {
+            policy.WithOrigins("http://localhost:3000", frontendDomain!)
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+        }
+        else
+        {
+            policy.WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+        }
     });
 });
 
@@ -98,3 +108,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }
