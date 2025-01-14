@@ -42,6 +42,8 @@ test:
   stage: test
   script:
     # - docker run --rm $IMAGE_NAME:$CI_COMMIT_SHORT_SHA dotnet test $PROJECT_PATH --no-build --verbosity detailed
+    - echo "Creating appsettings.json..."
+    - echo "$APPSETTINGS" > LoreVault/LoreVault.API/appsettings.json
     - dotnet test $TEST_PROJECT_PATH --logger "console;verbosity=detailed"
   # only:
   #   - development
