@@ -10,6 +10,7 @@ variables:
   IMAGE_NAME: "howtofail/lorevault-api"
   KUBE_NAMESPACE: "lorevault-testing"
   DEPLOYMENT_NAME: "lorevault-backend"
+  LOGFILEPATH: "./LoreVault/Tests/JUnitTestLogFile.xml"
 
 # Use .NET SDK image as the base image
 image: mcr.microsoft.com/dotnet/sdk:8.0
@@ -38,7 +39,8 @@ build:
 test:
   stage: test
   script:
-    - docker run --rm $IMAGE_NAME:$CI_COMMIT_SHORT_SHA dotnet test $PROJECT_PATH --no-build --verbosity normal
+    # - docker run --rm $IMAGE_NAME:$CI_COMMIT_SHORT_SHA dotnet test $PROJECT_PATH --no-build --verbosity detailed
+    - dotnet test $PROJECT_PATH --logger "junit;LogFilePath=$LOGFILEPATH"
   # only:
   #   - development
 
