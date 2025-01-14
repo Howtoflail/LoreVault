@@ -40,7 +40,7 @@ test:
   stage: test
   script:
     # - docker run --rm $IMAGE_NAME:$CI_COMMIT_SHORT_SHA dotnet test $PROJECT_PATH --no-build --verbosity detailed
-    - dotnet test $PROJECT_PATH --logger "junit;LogFilePath=$LOGFILEPATH"
+    - dotnet test $PROJECT_PATH --logger "console;verbosity=detailed" --logger "junit;LogFilePath=$LOGFILEPATH"
   # only:
   #   - development
 
