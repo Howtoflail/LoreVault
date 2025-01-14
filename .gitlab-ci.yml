@@ -1,12 +1,14 @@
 stages:
   - build
   - test
+  #- sonarqube-check
   - deploy
 
 variables:
   DOTNET_VERSION: "8.0"
   BUILD_CONFIG: "Release"
   PROJECT_PATH: "./LoreVault/LoreVault.API/LoreVault.API.csproj"
+  TEST_PROJECT_PATH: "./LoreVault/Tests/Tests.csproj"
   IMAGE_NAME: "howtofail/lorevault-api"
   KUBE_NAMESPACE: "lorevault-testing"
   DEPLOYMENT_NAME: "lorevault-backend"
@@ -40,9 +42,21 @@ test:
   stage: test
   script:
     # - docker run --rm $IMAGE_NAME:$CI_COMMIT_SHORT_SHA dotnet test $PROJECT_PATH --no-build --verbosity detailed
-    - dotnet test --logger "console;verbosity=detailed" --logger "junit;LogFilePath=$LOGFILEPATH"
+    - dotnet test $TEST_PROJECT_PATH --logger "console;verbosity=detailed" --logger "junit;LogFilePath=$LOGFILEPATH"
   # only:
   #   - development
+
+# sonarqube-check:
+#   stage: sonarqube-check
+#   script:
+#     - apt-get update
+#     - apt-get install -y openjdk-17-jre
+#     - dotnet tool install --global dotnet-sonarscanner
+#     - "export PATH=\"$PATH:$HOME/.dotnet/tools\""
+#     - "dotnet sonarscanner begin /k:\"projectKey" /d:sonar.token=\"$SONAR_TOKEN\" /d:\"sonar.host.url=$SONAR_HOST_URL\" "  #Replace "projectKey" with your project key
+#     - "dotnet build"
+#     - "dotnet sonarscanner end /d:sonar.token=\"$SONAR_TOKEN\""
+#   allow_failure: true
 
 deploy:
   stage: deploy
