@@ -36,8 +36,11 @@ namespace LoreVault.Service
                 throw new ArgumentException("Frontend token missing iat or exp claims.");
             }
 
-            long iatTimestamp = long.Parse(iat);
-            long expTimestamp = long.Parse(exp);
+            // Ensure 'iat' and 'exp' are parsed correctly as long
+            if (!long.TryParse(iat, out var iatTimestamp) || !long.TryParse(exp, out var expTimestamp))
+            {
+                throw new ArgumentException("Invalid 'iat' or 'exp' format in frontend token.");
+            }
 
             // Set custom claims for backend JWT
             var claims = new[]
@@ -47,8 +50,10 @@ namespace LoreVault.Service
                 // new Claim(ClaimTypes.Email, user.Email),
                 new Claim("GoogleId", user.GoogleId),  // Google ID
                 // new Claim("role", user.Role),
-                new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.FromUnixTimeSeconds(iatTimestamp).DateTime.ToString(), ClaimValueTypes.DateTime),
-                new Claim(JwtRegisteredClaimNames.Exp, DateTimeOffset.FromUnixTimeSeconds(expTimestamp).DateTime.ToString(), ClaimValueTypes.DateTime)
+                // new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.FromUnixTimeSeconds(iatTimestamp).DateTime.ToString(), ClaimValueTypes.DateTime),
+                // new Claim(JwtRegisteredClaimNames.Exp, DateTimeOffset.FromUnixTimeSeconds(expTimestamp).DateTime.ToString(), ClaimValueTypes.DateTime),
+                new Claim(JwtRegisteredClaimNames.Iat, iatTimestamp.ToString(), ClaimValueTypes.Integer64),
+                new Claim(JwtRegisteredClaimNames.Exp, expTimestamp.ToString(), ClaimValueTypes.Integer64)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.JwtSecret));
