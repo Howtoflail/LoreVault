@@ -57,7 +57,7 @@ namespace LoreVault.Service
             // Create the token with the same iat and exp from the frontend token
             var token = new JwtSecurityToken(
                 issuer: $"https://{_settings.Domain}/",
-                audience: _settings.ClientId,
+                audience: _settings.Audience,
                 claims: claims,
                 notBefore: DateTimeOffset.FromUnixTimeSeconds(iatTimestamp).DateTime,
                 expires: DateTimeOffset.FromUnixTimeSeconds(expTimestamp).DateTime,
