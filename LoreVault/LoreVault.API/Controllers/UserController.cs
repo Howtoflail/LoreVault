@@ -58,6 +58,14 @@ namespace LoreVault.API.Controllers
             return Ok(users);
         }
 
+        [Authorize]
+        [HttpGet("get-user-by-google-id")]
+        public async Task<IActionResult> GetUserByGoogleId(string googleId)
+        {
+            var user = await _userService.GetUserByGoogleId(googleId);
+            return Ok(user);
+        }
+
         [HttpPost("login-with-google")]
         public async Task<IActionResult> LoginWithGoogle([FromBody] LoginWithGoogleRequest request)
         {
