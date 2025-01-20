@@ -38,6 +38,7 @@ Json body that includes the user of the application.
 `Content-Type: application/json`, where the body needs to contain the id token retrieved after logging in with Google through Auth0 and being redirected to the home page.
 
 #### Returns
+The method validates the token sent in the body, after which makes a query to check if the user is already a user of LoreVault. If not, a new user is created. If the user already exists, it logs the user in.
 A JWT Token that is stored in the session in the frontend and used as an access token in the document service.
 
 ### Running locally
