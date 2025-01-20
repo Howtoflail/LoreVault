@@ -1,0 +1,35 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  //"CosmosDb": {
+  //  "EndpointUri": "EndpointUri",
+  //  "PrimaryKey": "PrimaryKey",
+  //  "DatabaseId": "DatabaseId",
+  //  "ContainerId": "ContainerId"
+  //},
+  // Use this for end to end tests
+  "CosmosDb": {
+    "EndpointUri": "EndpointUri",
+    "PrimaryKey": "PrimaryKey",
+    "DatabaseId": "DatabaseId-Test",
+    "ContainerId": "ContainerId-Test"
+  },
+  "CosmosDbTest": {
+    "EndpointUri": "EndpointUri",
+    "PrimaryKey": "PrimaryKey",
+    "DatabaseId": "DatabaseId-Test",
+    "ContainerId": "ContainerId-Test"
+  },
+  "Auth0SPA": {
+    "Domain": "Domain",
+    "Audience": "Audience",
+    "ClientId": "ClientId",
+    "ClientSecret": "ClientSecret",
+    "JwtSecret": "JwtSecret"
+  }
+}
